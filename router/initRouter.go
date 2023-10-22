@@ -10,7 +10,7 @@ func SetUpRouter() *gin.Engine {
 	txt2imgRouter := router.Group("")
 	{
 		// 通过文本生成图片
-		txt2imgRouter.POST("/txt2img", aimage.SaveTxt2Image)
+		txt2imgRouter.POST("/txt2img", aimage.GetTxt2Image)
 	}
 	return router
 }

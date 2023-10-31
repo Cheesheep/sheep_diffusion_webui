@@ -43,3 +43,77 @@
 }
 ~~~
 
+
+
+## 后端问题解决
+
+> 记录一些调试过程中遇到过的问题
+
+### 1. 跨域请求
+
+这个花了我好一段时间，是第一次链接前后端请求的时候
+
+- 一开始遇到的问题是报错里面有`Error Network`之类的，这个实际上是由于我端口没有设置好
+
+  例如前端这里是在main.js里面设置就可以了
+
+  ~~~javascript
+  axios.defaults.baseURL='http://172.29.35.238:9000'  
+  ~~~
+
+  然后后端需要设置CORS头
+
+  ```go
+  	router := gin.Default()
+  	// 设置CORS头，用于跨域请求
+  	router.Use(func(c *gin.Context) {
+  		//c.Header("Access-Control-Allow-Origin", "http://localhost:8080")     // 允许特定域名访问
+  		c.Header("Access-Control-Allow-Origin", "http://localhost:8080") // 允许特定域名访问
+  		c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+          .......
+      }
+  ```
+
+  而我打开页面使用的是实验室里面的电脑，因此和我跑前后端的放在宿舍的电脑端口自然就不一样了，后端写成localhost，而前端这里又是网络端口，因此发生了错误
+
+  如果是实验室电脑访问，那就应该前后端的IP都写成172开头的那个
+
+- 解决了这个问题后，我发送空的POST请求成功了，但是发送带json数据的POST请求却**失败**了！
+
+  这是为什么呢，查看报错，发现是跨域链接的过程中报错`Access to XMLHttpRequest at 'http://localhost:9000/txt2img' from origin 'http://localhost:8080' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: It does not have HTTP ok status`
+
+  前面一大堆的不用看，只看最后，It does not have HTTP ok status，然后我们再查看后端的控制台信息，是404的报错！
+
+  ![image-20231025223852826](https://gitee.com/cheesheep/typora-photo-bed/raw/master/Timg/image-20231025223852826.png)
+
+  也就是说其实数据已经发过去了，但是那边没有返回正确的内容，而且呢这个提交的方法是OPTION，这不是POST呀，我提交的明明是POST方法呀
+
+  果然上网一搜，原来前端在发送POST请求前会先发一个OPTION请求，用来验证一下是否可以正常和后端通信，若不能POST请求就不发送了，这样也可以节约资源，嗯嗯，跟http的握手有点像呢哈哈
+
+  于是添加相应的代码，注意是在`router.Use`当中喔
+
+  ```go
+  	router.Use(func(c *gin.Context) {
+  		c.Header("Access-Control-Allow-Origin", "http://172.29.35.238:8080") // 允许特定域名访问
+  		........
+  		// axios
+  		if c.Request.Method == http.MethodOptions {
+  			c.JSON(http.StatusOK, nil)
+  		}
+  		c.Next()
+  	})
+  ```
+
+  然后就可以愉快地进行前后端通信啦！
+
+  ![image-20231025224318360](https://gitee.com/cheesheep/typora-photo-bed/raw/master/Timg/image-20231025224318360.png)
+
+  
+
+
+
+
+
+## 前端问题解决：
+
+> 记录前端遇到过的一些值得记录的问题

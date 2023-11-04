@@ -1,5 +1,8 @@
 # Stable Diffusion接口
-### 输入格式
+### 文生图接口：
+
+输入格式
+
 ~~~json
 /sdapi/v1/txt2img
 {
@@ -30,7 +33,7 @@
  "sampler_index": "Euler" //采样方法
 }
 ~~~
-### 输出格式
+输出格式
 
 ~~~json
 {
@@ -42,6 +45,33 @@
     "info": "{\"prompt\": \"puppy dogs\", \"all_prompts\": [\"puppy dogs\", \"puppy dogs\"], \"negative_prompt\": \"\", \"all_negative_prompts\": [\"\", \"\"], \"seed\": 2404186668, \"all_seeds\": [2404186668, 2404186669], \"subseed\": 3290733804, \"all_subseeds\": [3290733804, 3290733805], \"subseed_strength\": 0, \"width\": 512, \"height\": 512, \"sampler_name\": \"Euler\", \"cfg_scale\": 7.0, \"steps\": 50, \"batch_size\": 2, \"restore_faces\": false, \"face_restoration_model\": null, \"sd_model_hash\": \"7331f3bc87\", \"seed_resize_from_w\": -1, \"seed_resize_from_h\": -1, \"denoising_strength\": 0.0, \"extra_generation_params\": {}, \"index_of_first_image\": 0, \"infotexts\": [\"puppy dogs\\nSteps: 50, Sampler: Euler, CFG scale: 7.0, Seed: 2404186668, Size: 512x512, Model hash: 7331f3bc87, Seed resize from: -1x-1, Denoising strength: 0.0, ENSD: 31337\", \"puppy dogs\\nSteps: 50, Sampler: Euler, CFG scale: 7.0, Seed: 2404186669, Size: 512x512, Model hash: 7331f3bc87, Seed resize from: -1x-1, Denoising strength: 0.0, ENSD: 31337\"], \"styles\": [], \"job_timestamp\": \"20230422213724\", \"clip_skip\": 1, \"is_using_inpainting_conditioning\": false}"
 }
 ~~~
+
+
+
+### 后期处理接口：
+
+输入格式
+
+```json
+{
+  "resize_mode": 0,
+  "show_extras_results": true,
+  "gfpgan_visibility": 0,
+  "codeformer_visibility": 0,
+  "codeformer_weight": 0,
+  "upscaling_resize": 2,
+  "upscaling_resize_w": 512,
+  "upscaling_resize_h": 512,
+  "upscaling_crop": true,
+  "upscaler_1": "None",
+  "upscaler_2": "None",
+  "extras_upscaler_2_visibility": 0,
+  "upscale_first": false,
+  "image": ""                       // 原图
+}
+```
+
+
 
 
 

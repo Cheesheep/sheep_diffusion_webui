@@ -1,6 +1,7 @@
 package model
 
 type TxtModel struct {
+	Name             string `json:"name"`
 	Prompt           string `json:"prompt"`
 	NegativePrompt   string `json:"negative_prompt"`
 	Steps            int    `json:"steps"`
@@ -17,7 +18,7 @@ type TxtModel struct {
 	SamplerIndex string `json:"sampler_index"`
 }
 
-// 响应的JSON结构如下：
+// TxtResponse 响应的JSON结构如下：
 type TxtResponse struct {
 	Images []string `json:"images"`
 	// 其他字段...不是很重要..

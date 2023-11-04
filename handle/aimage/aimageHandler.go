@@ -4,14 +4,14 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"stable_diffusion_goweb/model"
 )
+
+var GlobalTxt model.TxtModel
 
 func GetTxt2Image(context *gin.Context) {
 	log.Println("开始生成图片")
@@ -28,6 +28,7 @@ func GetTxt2Image(context *gin.Context) {
 		})
 		log.Panicln("绑定发生错误: ", err.Error())
 	}
+	GlobalTxt = txt //更改全局提示词信息，表示当前提示词已经发生改变
 	log.Println("前端传输的文本信息：", txt)
 	// 将结构体转成Json
 	jsonData, err := json.Marshal(txt)
@@ -79,18 +80,6 @@ func ReadReceiveData(resp *http.Response, data *model.TxtResponse) {
 		if err != nil {
 			log.Panicln("解析响应数据失败：", err)
 			return
-		}
-
-		// 将图片解析出来(base64)并保存
-		for i, img := range (*data).Images {
-			b, err := base64.StdEncoding.DecodeString(img)
-			if err != nil {
-				log.Panicln("解码图片失败：", err)
-			}
-			err = os.WriteFile(fmt.Sprintf("album/%d.png", i), b, 0644)
-			if err != nil {
-				log.Panicln("保存图片失败：", err)
-			}
 		}
 	} else {
 		log.Panicln("请求失败，状态码：", resp.StatusCode)

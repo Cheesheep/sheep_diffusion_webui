@@ -13,7 +13,7 @@ import (
 
 var GlobalTxt model.TxtModel
 
-func GetTxt2Image(context *gin.Context) {
+func GetAiImage(context *gin.Context) {
 	log.Println("开始生成图片")
 	endpoint := "http://cheesheep.xyz"
 	username := "sheep"
@@ -29,7 +29,9 @@ func GetTxt2Image(context *gin.Context) {
 		log.Panicln("绑定发生错误: ", err.Error())
 	}
 	GlobalTxt = txt //更改全局提示词信息，表示当前提示词已经发生改变
-	log.Println("前端传输的文本信息：", txt)
+	log.Println(txt.Name, " 前端传输的文本信息：", txt.DenoisingStrength)
+	log.Println(txt.Name, " 前端传输的文本信息：", txt.ResizeMode)
+	log.Println(txt.Name, " 前端传输的文本信息：", txt.Seed)
 	// 将结构体转成Json
 	jsonData, err := json.Marshal(txt)
 	if err != nil {
@@ -38,9 +40,13 @@ func GetTxt2Image(context *gin.Context) {
 
 	// 创建一个http.Client
 	client := &http.Client{}
-
+	req := new(http.Request)
 	// 创建一个POST请求
-	req, err := http.NewRequest("POST", endpoint+"/sdapi/v1/txt2img", bytes.NewReader(jsonData))
+	if txt.Name == "txt2img" {
+		req, err = http.NewRequest("POST", endpoint+"/sdapi/v1/txt2img", bytes.NewReader(jsonData))
+	} else if txt.Name == "img2img" {
+		req, err = http.NewRequest("POST", endpoint+"/sdapi/v1/img2img", bytes.NewReader(jsonData))
+	}
 	if err != nil {
 		log.Panicln("创建请求失败：", err.Error())
 		return

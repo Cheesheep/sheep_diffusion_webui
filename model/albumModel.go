@@ -30,6 +30,10 @@ func (album Album) GetAll() []Album {
 	initDB.Db.Find(&images)
 	return images
 }
+func (album Album) FindById() Album {
+	initDB.Db.First(&album, album.Id)
+	return album
+}
 
 func (album Album) Insert() int {
 	create := initDB.Db.Create(&album)
@@ -44,8 +48,20 @@ func (album Album) Modify() {
 	initDB.Db.Model(&Album{}).
 		Where("id = ?", album.Id).
 		Updates(Album{
-			Name: album.Name,
+			Name:   album.Name,
+			Width:  album.Width,
+			Height: album.Height,
 		})
+}
+
+// Search 模糊搜索名字
+func (album Album) Search(text string) []Album {
+	var images []Album
+	text = "%" + text + "%" //添加了%才能实现模糊匹配
+	if err := initDB.Db.Where("name LIKE ?", text).Find(&images).Error; err != nil {
+		log.Panicln("查询出错：", err)
+	}
+	return images
 }
 func (album Album) Delete() {
 	initDB.Db.Delete(album)

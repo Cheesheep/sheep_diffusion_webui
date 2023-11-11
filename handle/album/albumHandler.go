@@ -73,7 +73,13 @@ func ModifyImage(context *gin.Context) {
 	})
 }
 func SearchImage(context *gin.Context) {
-
+	searchText := context.Query("searchInput")
+	log.Println("搜索文本", searchText)
+	image := model.Album{}
+	images := image.Search(searchText)
+	context.JSON(http.StatusOK, gin.H{
+		"images": images,
+	})
 }
 
 // DeleteImages 删除多张图片
@@ -87,7 +93,11 @@ func DeleteImages(context *gin.Context) {
 			image := model.Album{
 				Id: id,
 			}
-			image.Delete()
+			err = os.Remove(image.FindById().SavePath)
+			if err != nil {
+				log.Panicln("删除本地图片失败:", err)
+			}
+			image.Delete() //数据库删除相应的图片记录
 			log.Println("第", id, "张图片删除成功！")
 		}
 	}

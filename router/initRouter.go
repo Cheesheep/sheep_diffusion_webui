@@ -41,7 +41,9 @@ func SetUpRouter() *gin.Engine {
 	aimageRouter := router.Group("/aimage")
 	{
 		// 通过文本生成图片
-		aimageRouter.POST("/txt2img", aimage.GetTxt2Image)
+		aimageRouter.POST("/txt2img", aimage.GetAiImage)
+		//通过图片生成图片，接口其实是一样的
+		aimageRouter.POST("/img2img", aimage.GetAiImage)
 	}
 	return router
 }

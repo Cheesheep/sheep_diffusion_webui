@@ -6,22 +6,24 @@ import (
 )
 
 type Album struct {
-	Id       int    `json:"id"`
-	Name     string `json:"name"`
-	SavePath string `json:"save_path"`
-	Height   int    `json:"height"`
-	Width    int    `json:"width"`
-	//Prompt         string `json:"prompt"`
-	//NegativePrompt string `json:"negative_prompt"`
-	//Steps          int    `json:"steps"`
-	//BatchSize      int    `json:"batch_size"`
-	//CfgScale       int    `json:"cfg_scale"`
-	//Seed           int    `json:"seed"`
-	//NIter          int    `json:"n_iter"`
-	////OverrideSettings的两个属性直接取出来
-	//SDModelCheckpoint string `json:"sd_model_checkpoint"`
-	//SDVae             string `json:"sd_vae"`
-	//SamplerIndex      string `json:"sampler_index"`
+	Id                int     `json:"id"`
+	Name              string  `json:"name"`
+	SavePath          string  `json:"save_path"`
+	Height            int     `json:"height"`
+	Width             int     `json:"width"`
+	DenoisingStrength float32 `json:"denoising_strength"`
+	ResizeMode        int     `json:"resize_mode"`
+	Prompt            string  `json:"prompt"`
+	NegativePrompt    string  `json:"negative_prompt"`
+	Steps             int     `json:"steps"`
+	BatchSize         int     `json:"batch_size"`
+	CfgScale          int     `json:"cfg_scale"`
+	Seed              int     `json:"seed"`
+	NIter             int     `json:"n_iter"`
+	//OverrideSettings的两个属性直接取出来
+	SDModelCheckpoint string `json:"sd_model_checkpoint"`
+	SDVae             string `json:"sd_vae"`
+	SamplerIndex      string `json:"sampler_index"`
 }
 
 // GetAll 获取所有图片

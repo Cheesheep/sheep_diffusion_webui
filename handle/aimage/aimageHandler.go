@@ -15,7 +15,8 @@ var GlobalTxt model.TxtModel
 
 func GetAiImage(context *gin.Context) {
 	log.Println("开始生成图片")
-	endpoint := "http://cheesheep.xyz"
+	//endpoint := "http://cheesheep.xyz"
+	endpoint := "http://sd.fc-stable-diffusion-plus.1770045088640528.cn-shenzhen.fc.devsapp.net"
 	username := "sheep"
 	password := "110120"
 	// 解析响应JSON数据
@@ -64,16 +65,7 @@ func GetAiImage(context *gin.Context) {
 	defer resp.Body.Close()
 
 	// 读取响应数据
-	ReadReceiveData(resp, &data)
-
-	//返回最终结果
-	context.JSON(http.StatusOK, gin.H{
-		"msg":    "生成图像成功！",
-		"images": data.Images,
-	})
-}
-
-func ReadReceiveData(resp *http.Response, data *model.TxtResponse) {
+	//ReadReceiveData(resp, &data)
 	if resp.StatusCode == http.StatusOK {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
@@ -82,12 +74,22 @@ func ReadReceiveData(resp *http.Response, data *model.TxtResponse) {
 		}
 
 		//将json格式的body转换成结构体到data当中
-		err = json.Unmarshal(body, data)
+		err = json.Unmarshal(body, &data)
 		if err != nil {
 			log.Panicln("解析响应数据失败：", err)
 			return
 		}
+		//返回成功结果
+		context.JSON(http.StatusOK, gin.H{
+			"msg":    "生成图像成功！",
+			"images": data.Images,
+		})
 	} else {
-		log.Panicln("请求失败，状态码：", resp.StatusCode)
+		//返回错误结果
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"msg":    "云端解析图像数据失败！",
+			"images": data.Images,
+		})
+		log.Panicln("云端解析图像数据失败，状态码：", resp.StatusCode)
 	}
 }

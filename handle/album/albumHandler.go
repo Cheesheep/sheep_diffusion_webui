@@ -42,6 +42,18 @@ func SaveImage(context *gin.Context) {
 		image.Name = strings.TrimSuffix(fileName, "myAlbum/")
 		image.Width = aimage.GlobalTxt.Width
 		image.Height = aimage.GlobalTxt.Height
+		image.DenoisingStrength = aimage.GlobalTxt.DenoisingStrength
+		image.ResizeMode = aimage.GlobalTxt.ResizeMode
+		image.Prompt = aimage.GlobalTxt.Prompt
+		image.NegativePrompt = aimage.GlobalTxt.NegativePrompt
+		image.Steps = aimage.GlobalTxt.Steps
+		image.BatchSize = aimage.GlobalTxt.BatchSize
+		image.CfgScale = aimage.GlobalTxt.CfgScale
+		image.Seed = aimage.GlobalTxt.Seed
+		image.NIter = aimage.GlobalTxt.NIter
+		image.SDModelCheckpoint = aimage.GlobalTxt.OverrideSettings.SDModelCheckpoint
+		image.SDVae = aimage.GlobalTxt.OverrideSettings.SDVae
+		image.SamplerIndex = aimage.GlobalTxt.SamplerIndex
 		if id = image.Insert(); id == -1 {
 			log.Panicln("保存图片失败：", err)
 		}

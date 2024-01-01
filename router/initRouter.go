@@ -11,8 +11,7 @@ func SetUpRouter() *gin.Engine {
 	router := gin.Default()
 	// 设置CORS头，用于跨域请求
 	router.Use(func(c *gin.Context) {
-		//c.Header("Access-Control-Allow-Origin", "http://localhost:8080") // 允许特定域名访问
-		c.Header("Access-Control-Allow-Origin", "http://172.29.35.238:8080") // 允许特定域名访问
+		c.Header("Access-Control-Allow-Origin", "http://localhost:8080") // 允许特定域名访问
 		c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS,DELETE,PUT")
 		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		c.Header("Access-Control-Allow-Credentials", "true")
@@ -44,6 +43,8 @@ func SetUpRouter() *gin.Engine {
 		aimageRouter.POST("/txt2img", aimage.GetAiImage)
 		//通过图片生成图片，接口其实是一样的
 		aimageRouter.POST("/img2img", aimage.GetAiImage)
+		//获取图片生成的进度
+		aimageRouter.GET("/progress", aimage.GetAiProgress)
 	}
 	return router
 }
